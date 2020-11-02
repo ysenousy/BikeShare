@@ -228,9 +228,35 @@ def user_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
+def request_data(df):
+    """Function if the user want to show the first 5 raw data"""    
+    data_index = 0
+    
+    request5rows = input("Do you want to see the raw data? (y) for 'Yes' or (n) for 'No'> ").lower()
+    if request5rows not in ['y', 'n']:
+        request5rows = input("You wrote the wrong word. Please type Yes or No.> ").lower()
+    elif request5rows == 'y':
+         data_index += 5
+         print(tabulate.tabulate(df.iloc[data_index : data_index + 5], tablefmt='grid', showindex=False))
+    elif request5rows == 'n':
+         return
+    while True:
+        another5rows = input("Do you want to see more? (y) or (n)> ").lower()
+        if another5rows not in ['y', 'n']:
+            another5rows = input("You wrote the wrong word. Please type Yes or No.> ").lower()
+        elif another5rows == 'y':
+             data_index += 5
+             print(tabulate.tabulate(df.iloc[data_index : data_index + 5], tablefmt='grid', showindex=False))
+             
+        elif another5rows == 'n':
+           return
 
 def main():
     while True:
+        
+        city = ""
+        month = ""
+        day = ""
         city, month, day = get_filters()
         df = load_data(city, month, day)
 
@@ -238,7 +264,8 @@ def main():
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df)
-
+        request_data(df)
+        
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
             break
